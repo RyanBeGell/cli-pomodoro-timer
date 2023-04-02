@@ -26,7 +26,7 @@ func main() {
 
 	// Create widgets
 	timer := widgets.NewParagraph()
-	timer.Title = "Pomodoro Timer \u23F1 \U0001F345"
+	timer.Title = "Pomodoro Timer \U0001F345"
 	timer.Text = formatTime(workDuration)
 	timer.TextStyle.Fg = ui.ColorGreen
 	timer.SetRect(0, 0, 50, 3)

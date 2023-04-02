@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"time"
-
-	"github.com/gen2brain/beeep"
 	ui "github.com/gizak/termui/v3"
 	"github.com/gizak/termui/v3/widgets"
+	"os"
+	"os/exec"
+	"time"
 )
 
 const (
@@ -15,6 +15,7 @@ const (
 )
 
 func main() {
+
 	if err := ui.Init(); err != nil {
 		panic(err)
 	}
@@ -22,36 +23,50 @@ func main() {
 
 	workDuration := time.Duration(workMinutes) * time.Minute
 	breakDuration := time.Duration(breakMinutes) * time.Minute
-	rounds := 4
+	rounds := 72 // 24-hour cycle
 
 	// Create widgets
 	timer := widgets.NewParagraph()
-	timer.Title = "Pomodoro Timer \U0001F345"
+	timer.Title = " Pomodoro Timer \U0001F345 "
 	timer.Text = formatTime(workDuration)
 	timer.TextStyle.Fg = ui.ColorGreen
-	timer.SetRect(0, 0, 50, 9)
+	timer.SetRect(0, 0, 51, 10)
 
 	status := widgets.NewParagraph()
-	status.Title = "Status"
+	status.Title = " Status "
 	status.Text = "Working"
 	status.TextStyle.Fg = ui.ColorYellow
-	status.SetRect(0, 3, 50, 6)
+	status.SetRect(1, 3, 50, 6)
 
 	progress := widgets.NewGauge()
-	progress.Title = "Progress"
+	progress.Title = " Progress "
 	progress.Percent = 0
 	progress.BarColor = ui.ColorBlue
-	progress.SetRect(0, 6, 50, 9)
+	progress.SetRect(1, 6, 50, 9)
 
 	ui.Render(timer)
+
+	events := ui.PollEvents()
+	go func() {
+		for {
+			e := <-events
+			if e.Type == ui.KeyboardEvent {
+				switch e.ID {
+				case "q", "<C-c>":
+					ui.Close()
+					fmt.Println("Exiting Pomodoro CLI...")
+					os.Exit(0)
+					return
+				}
+			}
+		}
+	}()
 
 	for round := 1; round <= rounds; round++ {
 		runPomodoro(timer, status, progress, workDuration, "Working")
 		showNotification("Pomodoro Timer", "Time for a break!")
-		playSound()
 		runPomodoro(timer, status, progress, breakDuration, "Break")
 		showNotification("Pomodoro Timer", "Time to get back to work!")
-		playSound()
 	}
 
 	// Show completed message
@@ -86,20 +101,12 @@ func runPomodoro(timer *widgets.Paragraph, status *widgets.Paragraph, progress *
 	time.Sleep(1 * time.Second)
 }
 
-func playSound() {
-	for i := 0; i < 3; i++ {
-		err := beeep.Beep(beeep.DefaultFreq, beeep.DefaultDuration)
-		if err != nil {
-			fmt.Println(err)
-		}
-		time.Sleep(500 * time.Millisecond) // Wait for 500 milliseconds between each beep
-	}
-}
-
 func showNotification(title, message string) {
 	iconPath := "./tomato-icon.png"
-	err := beeep.Notify(title, message, iconPath)
+	cmd := exec.Command("powershell.exe", fmt.Sprintf("New-BurntToastNotification -AppLogo '%s' -Text '%s', '%s'", iconPath, title, message))
+	err := cmd.Run()
 	if err != nil {
+		fmt.Println("Error:", err)
 		return
 	}
 }

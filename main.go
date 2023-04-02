@@ -29,7 +29,7 @@ func main() {
 	timer.Title = "Pomodoro Timer \U0001F345"
 	timer.Text = formatTime(workDuration)
 	timer.TextStyle.Fg = ui.ColorGreen
-	timer.SetRect(0, 0, 50, 3)
+	timer.SetRect(0, 0, 50, 9)
 
 	status := widgets.NewParagraph()
 	status.Title = "Status"
@@ -43,7 +43,7 @@ func main() {
 	progress.BarColor = ui.ColorBlue
 	progress.SetRect(0, 6, 50, 9)
 
-	ui.Render(timer, status, progress)
+	ui.Render(timer)
 
 	for round := 1; round <= rounds; round++ {
 		runPomodoro(timer, status, progress, workDuration, "Working")
@@ -56,7 +56,7 @@ func main() {
 
 	// Show completed message
 	status.Text = "Done"
-	ui.Render(timer, status, progress)
+	ui.Render(timer)
 	time.Sleep(3 * time.Second)
 }
 

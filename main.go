@@ -35,13 +35,13 @@ func main() {
 	status.Title = "Status"
 	status.Text = "Working"
 	status.TextStyle.Fg = ui.ColorYellow
-	status.SetRect(0, 4, 50, 5)
+	status.SetRect(0, 3, 50, 6)
 
 	progress := widgets.NewGauge()
 	progress.Title = "Progress"
 	progress.Percent = 0
 	progress.BarColor = ui.ColorBlue
-	progress.SetRect(0, 6, 50, 7)
+	progress.SetRect(0, 6, 50, 9)
 
 	ui.Render(timer, status, progress)
 

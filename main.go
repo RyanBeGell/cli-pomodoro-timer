@@ -70,7 +70,7 @@ func main() {
 	longBreakCount := 0
 	for {
 		runPomodoro(timer, status, progress, dataBox, workDuration, "Working")
-		if (cycleCount+1)%2 == 0 {
+		if (cycleCount+1)%4 == 0 {
 			longBreakCount++
 			showNotification("Pomodoro Timer", "Time for a long break!")
 			runPomodoro(timer, status, progress, dataBox, longBreakDuration, "Long Break")

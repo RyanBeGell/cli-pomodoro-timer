@@ -1,4 +1,4 @@
-# Pomodoro Timer CLI for WSL  ![Golang Gopher](./gopher.png)
+# Pomodoro CLI  Timer for WSL  ![Golang Gopher](./gopher.png) ![Golang Gopher](./Capture.png)
 
 This is a command-line interface (CLI) Pomodoro Timer built in Go for Windows Subsystem for Linux (WSL) which includes Windows notifications to help you stay productive. The [Linux `notify-send` utility](https://ss64.com/bash/notify-send.html) doesn't work in Windows Subsystem for Linux, so this program executes a very short powershell script using the [BurntToast](https://github.com/Windos/BurntToast#installation) PowerShell Module, allowing this Pomodoro Timer to send Windows notifications from your WSL terminal. 
 

@@ -1,18 +1,18 @@
 package main
 
 import (
+	"cli-pomodoro-timer/internal/utils"
 	"fmt"
 	ui "github.com/gizak/termui/v3"
 	"github.com/gizak/termui/v3/widgets"
 	"os"
-	"os/exec"
 	"time"
 )
 
 const (
-	workMinutes      = 1
-	breakMinutes     = 1
-	longBreakMinutes = 1
+	workMinutes      = 25
+	breakMinutes     = 5
+	longBreakMinutes = 30
 )
 
 func main() {
@@ -72,13 +72,13 @@ func main() {
 		runPomodoro(timer, status, progress, dataBox, workDuration, "Working")
 		if (cycleCount+1)%4 == 0 {
 			longBreakCount++
-			showNotification("Pomodoro Timer", "Time for a long break!")
+			utils.ShowNotification("Pomodoro Timer", "Time for a long break!")
 			runPomodoro(timer, status, progress, dataBox, longBreakDuration, "Long Break")
 		} else {
-			showNotification("Pomodoro Timer", "Time for a break!")
+			utils.ShowNotification("Pomodoro Timer", "Time for a break!")
 			runPomodoro(timer, status, progress, dataBox, breakDuration, "Break")
 		}
-		showNotification("Pomodoro Timer", "Time to get back to work!")
+		utils.ShowNotification("Pomodoro Timer", "Time to get back to work!")
 		cycleCount++
 
 	}
@@ -95,7 +95,7 @@ func runPomodoro(timer *widgets.Paragraph, status *widgets.Paragraph, progress *
 			break
 		}
 		// Modify the status text to include the timer display string
-		status.Text = fmt.Sprintf("%s - %s", statusText, formatTime(remaining))
+		status.Text = fmt.Sprintf("%s - %s", statusText, utils.FormatTime(remaining))
 		progress.Percent = int((duration - remaining) * 100 / duration)
 		ui.Render(timer, status, progress, dataBox)
 	}
@@ -108,20 +108,4 @@ func runPomodoro(timer *widgets.Paragraph, status *widgets.Paragraph, progress *
 
 	// Wait for a second to show the completed message
 	time.Sleep(1 * time.Second)
-}
-
-func showNotification(title, message string) {
-	iconPath := "./tomato-icon.png"
-	cmd := exec.Command("powershell.exe", fmt.Sprintf("New-BurntToastNotification -AppLogo '%s' -Text '%s', '%s'", iconPath, title, message))
-	err := cmd.Run()
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-}
-
-func formatTime(duration time.Duration) string {
-	minutes := int(duration.Minutes())
-	seconds := int(duration.Seconds()) % 60
-	return fmt.Sprintf("%02d:%02d", minutes, seconds)
 }

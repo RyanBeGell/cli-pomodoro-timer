@@ -1,6 +1,6 @@
-# CLI Pomodoro Timer for WSL  ![Golang Gopher](images/gopher.png) ![Demo Photo](images/Capture.png)
+# CLI Pomodoro Timer for WSL  ![Golang Gopher](gopher.png) ![Demo Photo](images/Capture.png)
 
-This is a command-line interface (CLI) Pomodoro Timer built in Go for Windows Subsystem for Linux (WSL) which includes Windows notifications to help you stay productive. The [Linux `notify-send` utility](https://ss64.com/bash/notify-send.html) doesn't work in Windows Subsystem for Linux, so this program executes a very short powershell script using the [BurntToast](https://github.com/Windos/BurntToast#installation) PowerShell Module, allowing this Pomodoro Timer to send Windows notifications from your WSL terminal.
+This is a command-line interface (CLI) Pomodoro Timer built in Go for Windows Subsystem for Linux (WSL) which includes Windows notifications to help you stay productive. The [Linux `notify-send` utility](https://ss64.com/bash/notify-send.html) doesn't work in Windows Subsystem for Linux, so this program executes a very short powershell script to send Windows toast notifications from your WSL terminal.
 
 ![Windows Notification Example](images/WindowsNotification.png)
 ## What is the Pomodoro Technique 
@@ -12,14 +12,10 @@ You can learn more about the Pomodoro Technique [here](https://francescocirillo.
 
 * Windows Subsystem for Linux  (WSL)
 * Go 1.13 or later `sudo apt install golang-go`
-* [BurntToast](https://github.com/Windos/BurntToast#installation) PowerShell Module (for Windows notifications) 
 
-  To install the BurntToast module, follow these steps:
-    - Open PowerShell as an administrator.
-    - Run the following command `Install-Module -Name BurntToast`
 ## Usage
 
-1. Open a WSL terminal (I like using the [Windows Terminal](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701) app)
+1. Open a WSL Terminal session on [Windows Terminal](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701))
 2. Clone this repository `git clone https://github.com/RyanBeGell/pomodoro-cli.git`
 3. Navigate to the project directory in your terminal
 4. If you want to customize the work and break durations, modify the workMinutes, breakMinutes, and longBreakMinutes constants in the `main.go` file.

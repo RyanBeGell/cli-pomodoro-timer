@@ -116,7 +116,7 @@ func showNotification(title, message string) {
 
 	// define the path to the PowerShell script
 	scriptPath := "toast.ps1"
-	imageRelativePath := "gopher.png"
+	imageRelativePath := "gopher-logo.png"
 
 	// Create the absolute path to the image file
 	imageAbsPath, err := filepath.Abs(imageRelativePath)

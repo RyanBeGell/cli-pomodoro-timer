@@ -1,11 +1,12 @@
 package main
 
 import (
-	"cli-pomodoro-timer/internal/utils"
 	"fmt"
 	ui "github.com/gizak/termui/v3"
 	"github.com/gizak/termui/v3/widgets"
+	"github.com/go-toast/toast"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -72,13 +73,13 @@ func main() {
 		runPomodoro(timer, status, progress, dataBox, workDuration, "Working")
 		if (cycleCount+1)%4 == 0 {
 			longBreakCount++
-			utils.ShowNotification("Pomodoro Timer", "Time for a long break!")
+			showNotification("Pomodoro Timer", "Time for a long break!")
 			runPomodoro(timer, status, progress, dataBox, longBreakDuration, "Long Break")
 		} else {
-			utils.ShowNotification("Pomodoro Timer", "Time for a break!")
+			showNotification("Pomodoro Timer", "Time for a break!")
 			runPomodoro(timer, status, progress, dataBox, breakDuration, "Break")
 		}
-		utils.ShowNotification("Pomodoro Timer", "Time to get back to work!")
+		showNotification("Pomodoro Timer", "Time to get back to work!")
 		cycleCount++
 
 	}
@@ -95,7 +96,7 @@ func runPomodoro(timer *widgets.Paragraph, status *widgets.Paragraph, progress *
 			break
 		}
 		// Modify the status text to include the timer display string
-		status.Text = fmt.Sprintf("%s - %s", statusText, utils.FormatTime(remaining))
+		status.Text = fmt.Sprintf("%s - %s", statusText, formatTime(remaining))
 		progress.Percent = int((duration - remaining) * 100 / duration)
 		ui.Render(timer, status, progress, dataBox)
 	}
@@ -108,4 +109,35 @@ func runPomodoro(timer *widgets.Paragraph, status *widgets.Paragraph, progress *
 
 	// Wait for a second to show the completed message
 	time.Sleep(1 * time.Second)
+}
+
+func showNotification(title, message string) {
+	// Get the current working directory
+	wd, err := os.Getwd()
+	if err != nil {
+		fmt.Println("Error getting current working directory:", err)
+		return
+	}
+
+	// Construct the relative path to the icon
+	iconPath := filepath.Join(wd, "Untitled.png")
+
+	// Create the notification with the relative path for the icon
+	notification := toast.Notification{
+		AppID:   "CLI Pomodoro Timer",
+		Title:   title,
+		Message: message,
+		Icon:    iconPath,
+	}
+
+	err = notification.Push()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+}
+func formatTime(duration time.Duration) string {
+	minutes := int(duration.Minutes())
+	seconds := int(duration.Seconds()) % 60
+	return fmt.Sprintf("%02d:%02d", minutes, seconds)
 }

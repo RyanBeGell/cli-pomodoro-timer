@@ -4,10 +4,11 @@ import (
 	"fmt"
 	ui "github.com/gizak/termui/v3"
 	"github.com/gizak/termui/v3/widgets"
-	"gopkg.in/toast.v1"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"time"
+	// "path/filepath"
 )
 
 const (
@@ -112,30 +113,27 @@ func runPomodoro(timer *widgets.Paragraph, status *widgets.Paragraph, progress *
 }
 
 func showNotification(title, message string) {
-	// Get the current working directory
-	wd, err := os.Getwd()
+
+	// define the path to the PowerShell script
+	scriptPath := "toast.ps1"
+	imageRelativePath := "gopher.png"
+
+	// Create the absolute path to the image file
+	imageAbsPath, err := filepath.Abs(imageRelativePath)
 	if err != nil {
-		fmt.Println("Error getting current working directory:", err)
+		fmt.Println(err.Error())
 		return
 	}
 
-	// Construct the relative path to the icon
-	iconPath := filepath.Join(wd, "Untitled.png")
-
-	// Create the notification with the relative path for the icon
-	notification := toast.Notification{
-		AppID:   "CLI Pomodoro Timer",
-		Title:   title,
-		Message: message,
-		Icon:    iconPath,
-	}
-
-	err = notification.Push()
+	// execute PowerShell script using powershell.exe command
+	cmd := exec.Command("powershell.exe", "-File", scriptPath, "-title", title, "-message", message, "-imagePath", imageAbsPath)
+	err = cmd.Run()
 	if err != nil {
-		fmt.Println("Error:", err)
+		fmt.Println(err.Error())
 		return
 	}
 }
+
 func formatTime(duration time.Duration) string {
 	minutes := int(duration.Minutes())
 	seconds := int(duration.Seconds()) % 60

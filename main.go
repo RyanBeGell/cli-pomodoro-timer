@@ -7,8 +7,8 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"time"
-	// "path/filepath"
 )
 
 const (
@@ -74,13 +74,13 @@ func main() {
 		runPomodoro(timer, status, progress, dataBox, workDuration, "Working")
 		if (cycleCount+1)%4 == 0 {
 			longBreakCount++
-			showNotification("Pomodoro Timer", "Time for a long break!")
+			showNotification("Pomodoro Timer", "Time for a long break!", "./gopher-logo.png")
 			runPomodoro(timer, status, progress, dataBox, longBreakDuration, "Long Break")
 		} else {
-			showNotification("Pomodoro Timer", "Time for a break!")
+			showNotification("Pomodoro Timer", "Time for a break!", "./gopher-logo.png")
 			runPomodoro(timer, status, progress, dataBox, breakDuration, "Break")
 		}
-		showNotification("Pomodoro Timer", "Time to get back to work!")
+		showNotification("Pomodoro Timer", "Time to get back to work!", "./gopher-logo.png")
 		cycleCount++
 
 	}
@@ -112,22 +112,26 @@ func runPomodoro(timer *widgets.Paragraph, status *widgets.Paragraph, progress *
 	time.Sleep(1 * time.Second)
 }
 
-func showNotification(title, message string) {
+func showNotification(title, message, imageRelativePath string) {
 
 	// define the path to the PowerShell script
 	scriptPath := "toast.ps1"
-	imageRelativePath := "gopher-logo.png"
 
-	// Create the absolute path to the image file
-	imageAbsPath, err := filepath.Abs(imageRelativePath)
+	// get WSL path and convert the WSL path to a Windows path
+	cmd := exec.Command("wslpath", "-w", ".")
+	output, err := cmd.Output()
 	if err != nil {
-		fmt.Println(err.Error())
-		return
+		panic(err)
 	}
 
+	windowsPath := strings.TrimSpace(string(output))
+	//swap backslashes with forward slashes
+	windowsPath = strings.ReplaceAll(windowsPath, "\\", "/")
+	windowsPath = filepath.Join(windowsPath, imageRelativePath)
+
 	// execute PowerShell script using powershell.exe command
-	cmd := exec.Command("powershell.exe", "-File", scriptPath, "-title", title, "-message", message, "-imagePath", imageAbsPath)
-	err = cmd.Run()
+	cmd1 := exec.Command("powershell.exe", "-File", scriptPath, "-title", title, "-message", message, "-imagePath", windowsPath)
+	err = cmd1.Run()
 	if err != nil {
 		fmt.Println(err.Error())
 		return

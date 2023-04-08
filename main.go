@@ -12,9 +12,9 @@ import (
 )
 
 const (
-	workMinutes      = 1
-	breakMinutes     = 1
-	longBreakMinutes = 1
+	workMinutes      = 25
+	breakMinutes     = 5
+	longBreakMinutes = 30
 )
 
 func main() {

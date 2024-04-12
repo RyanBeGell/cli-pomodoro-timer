@@ -3,10 +3,8 @@
 This is a command-line interface (CLI) Pomodoro Timer built in Go for Windows Subsystem for Linux (WSL) which includes Windows notifications to help you stay productive. The Linux [`notify-send`](https://ss64.com/bash/notify-send.html) utility doesn't work in Windows Subsystem for Linux, so this program executes a very short powershell script to send Windows toast notifications from your WSL terminal.
 
 ![Windows Notification Example](images/WindowsNotification.png)
-## What is the Pomodoro Technique 
+## What is the [Pomodoro Technique](https://en.wikipedia.org/wiki/Pomodoro_Technique)
 The Pomodoro technique is a time management method that was developed by Francesco Cirillo in the late 1980s. It uses a timer to break down work into intervals, traditionally 25 minutes in length, separated by short 5-minute breaks. The Pomodoro technique is based on the idea that frequent small breaks can improve mental agility and productivity.
-
-You can learn more about the Pomodoro Technique [here](https://francescocirillo.com/pages/pomodoro-technique).
 
 ## Requirements
 
